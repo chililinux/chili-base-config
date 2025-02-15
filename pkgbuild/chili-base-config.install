@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166
 #
-#  pkgbuild.install
-#  Created: 2024/12/05 - 10:03
-#  Altered: 2024/12/05 - 10:03
+#  chili-base-config.install
+#  Created: 2025/01/30 - 20:23
+#  Altered: 2025/01/30 - 20:23
 #
-#  Copyright (c) 2024-2024, Vilmar Catafesta <vcatafesta@gmail.com>
+#  Copyright (c) 2025-2025, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -29,64 +29,58 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
-# Installation file for Arch Linux packages
-# This file contains scripts that are executed at different stages of package installation/upgrade/removal
 
 # Function executed before package installation
 # pre_install() {
 #     echo "Preparing to install the package..."
-# Example: Check for system dependencies
-# if ! command -v required_command &> /dev/null; then
-#     echo "Error: required_command not found. Please install it before continuing."
-#     exit 1
-# fi
+    # Example: Check for system dependencies
+    # if ! command -v required_command &> /dev/null; then
+    #     echo "Error: required_command not found. Please install it before continuing."
+    #     exit 1
+    # fi
 # }
 
-# Function executed after package installation
-# post_install() {
-#     echo "Configuring the package after installation..."
-# Example: Create a configuration directory
-# mkdir -p /etc/mypackage
-# chmod 755 /etc/mypackage
+post_install() {
+  local pkgname=chili-base-config
+  echo "Configuring the package after installation..."
 
-# Example: Start a service
-# systemctl enable myservice.service
-# systemctl start myservice.service
-# }
+	# Copiar a estrutura para os diretórios de destino
+	local dirs=("usr" "etc" "opt")
+
+	for dir in "${dirs[@]}"; do
+		if [ -d "/usr/share/${pkgname}/${dir}" ]; then
+			# Copiar os arquivos e subdiretórios de /usr/share/${pkgname}/${dir} para o sistema
+			echo "Copiando /usr/share/${pkgname}/${dir} para /"
+			cp -a "/usr/share/${pkgname}/${dir}" "/"
+		fi
+	done
+}
 
 # Function executed before package upgrade
 # pre_upgrade() {
 #     echo "Preparing to upgrade the package..."
-# Example: Backup configuration files
-# cp /etc/mypackage/config.conf /etc/mypackage/config.conf.bak
+    # Example: Backup configuration files
+    # cp /etc/mypackage/config.conf /etc/mypackage/config.conf.bak
 # }
 
-# Function executed after package upgrade
-# post_upgrade() {
-#     echo "Finalizing package upgrade..."
-# Usually, post_install is called here to ensure
-# all post-installation configurations are applied
-#     post_install
-
-# Example: Check and update configuration files
-# if [ -f /etc/mypackage/config.conf.pacnew ]; then
-#     echo "New configuration file available. Please review /etc/mypackage/config.conf.pacnew"
-# fi
-# }
+post_upgrade() {
+  echo "Finalizing package upgrade..."
+  post_install
+}
 
 # Function executed before package removal
 # pre_remove() {
 #     echo "Preparing to remove the package..."
-# Example: Stop services
-# systemctl stop myservice.service
-# systemctl disable myservice.service
+    # Example: Stop services
+    # systemctl stop myservice.service
+    # systemctl disable myservice.service
 # }
 
 # Function executed after package removal
 # post_remove() {
 #     echo "Cleaning up after package removal..."
-# Example: Remove data directories created by the package
-# rm -rf /var/lib/mypackage
+    # Example: Remove data directories created by the package
+    # rm -rf /var/lib/mypackage
 
 #     echo "If you want to remove all user data, run:"
 #     echo "rm -rf /home/*/mypackage_data"

@@ -1,3 +1,3 @@
-# chili-pkgbuild-template
+# chili-base-config
 
-Template for Chili Linux packages
+Package configuration BASE/SERVER
